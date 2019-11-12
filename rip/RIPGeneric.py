@@ -1,11 +1,10 @@
 '''
 @author: jcsombria
 '''
-import time
-
 from jsonrpc.JsonRpcServer import JsonRpcServer
 from jsonrpc.JsonRpcBuilder import JsonRpcBuilder
 from rip.RIPMeta import *
+import samplers
 
 builder = JsonRpcBuilder()
 
@@ -67,7 +66,7 @@ class RIPGeneric(JsonRpcServer):
     '''
     if not self.sseRunning:
       self.sseRunning = True
-      self.sampler = Sampler(self.ssePeriod)
+      self.sampler = samplers.Periodic(self.ssePeriod)
     self._running = True
 
   @property
@@ -204,9 +203,10 @@ class RIPGeneric(JsonRpcServer):
     '''
     Retrieve the next periodic update
     '''
+    # TO DO: Remove this code and start when the first client arrives
     if not self.sseRunning:
       self.sseRunning = True
-      self.sampler = Sampler(self.ssePeriod)
+      self.sampler = samplers.Periodic(self.ssePeriod)
 
     while self.sseRunning:
       self.sampler.wait()
@@ -242,28 +242,3 @@ class RIPGeneric(JsonRpcServer):
     To do after obtaining values to notify
     '''
     pass
-
-class Sampler(object):
-
-  def __init__(self, period):
-    self.Ts = period
-    self.reset()
-
-  def wait(self):
-    self.last = self.time
-    self.time = time.time() - self.t0
-    self.next = self.time / self.Ts + self.Ts
-    interval = self.Ts - self.time % self.Ts
-    time.sleep(interval)
-
-  def reset(self):
-    self.t0 = time.time()
-    self.time = 0
-    self.last = 0
-    self.next = self.Ts
-
-  def delta(self):
-    return self.time - self.last
-
-  def lastTime(self):
-    return self.last
