@@ -48,9 +48,12 @@ class HttpServer(object):
     cherrypy.response.headers['Cache-Control'] = 'no-cache'
     cherrypy.response.headers['Connection'] = 'keep-alive'
     # TO DO: stop when all clients are disconnected
-    if not self.control.running:
-        self.control.start()
-    return self.control.nextSample()
+    if expId is not None:
+      if expId in [e['id'] for e in self.experiences]:
+        if not self.control.running:
+          self.control.start()
+        return self.control.nextSample()
+    return 'event: CLOSE\n\n'
   SSE._cp_config = {'response.stream': True}
 
   @cherrypy.expose
