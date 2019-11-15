@@ -3,7 +3,7 @@
 '''
 import os.path
 
-from rip.RIPGeneric import RIPGeneric
+from rip.core.RIPGeneric import RIPGeneric
 from rip.matlab.MatlabConnector import CommandBuilder, MatlabConnector
 
 import matlab.engine

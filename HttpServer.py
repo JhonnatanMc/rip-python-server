@@ -5,8 +5,7 @@
 import cherrypy
 import os
 
-from rip.RIPMeta import *
-from rip.RIPGeneric import RIPGeneric
+from rip.core import *
 
 class HttpServer(object):
   '''

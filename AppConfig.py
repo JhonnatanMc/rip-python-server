@@ -10,14 +10,14 @@ config = {
   # The 'impl' field should contain the name of the module (.py) and the
   # class that implement the control interface
   'control': {
-    'impl_module': 'RIPGeneric',
+    'impl_module': 'RIPMatlab',
     # Also, if the class name is not the same as the module name:
     #'impl_name': 'RIPOctave',
     'info': {
-      'name': 'RIP Generic',
-      'description': 'A generic implementation of RIP',
+      'name': 'RIP MATLAB',
+      'description': 'An implementation of RIP to control a MATLAB session',
       'authors': 'J. Chacon',
-      'keywords': 'Raspberry PI, RIP',
+      'keywords': 'MATLAB, RIP',
       # Server readable objects
       'readables': [{
         'name':'time',

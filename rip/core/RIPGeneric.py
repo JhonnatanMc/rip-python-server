@@ -3,7 +3,7 @@
 '''
 from jsonrpc.JsonRpcServer import JsonRpcServer
 from jsonrpc.JsonRpcBuilder import JsonRpcBuilder
-from rip.RIPMeta import *
+from rip.core.RIPMeta import *
 import samplers
 
 builder = JsonRpcBuilder()
