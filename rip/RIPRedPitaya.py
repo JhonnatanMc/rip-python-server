@@ -1,7 +1,7 @@
 '''
 @author: Amine
 '''
-from rip.core.RIPGeneric import RIPGeneric
+from rip.RIPGeneric import RIPGeneric
 
 class RIPRedPitaya(RIPGeneric):
   '''

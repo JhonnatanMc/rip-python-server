@@ -9,32 +9,25 @@ config = {
   # The 'impl' field should contain the name of the module (.py) and the
   # class that implement the control interface
   'control': {
-    'impl_module': 'RIPOctave',
+    'impl_module': 'RIPMatlab',
     # Also, if the class name is not the same as the module name:
     #'impl_name': 'RIPOctave',
     'info': {
-      'name': 'Octave',
-      'description': 'An implementation of RIP to control Octave',
-      'authors': 'D. Garcia, J. Chacon',
-      'keywords': 'Octave, Raspberry PI, Robot',
+      'name': 'RIP MATLAB',
+      'description': 'An implementation of RIP to control a MATLAB session',
+      'authors': 'J. Chacon',
+      'keywords': 'MATLAB, RIP',
       # Server readable objects
       'readables': [{
-        'name':'x',
-        'description':'Testing readable variable',
+        'name':'time',
+        'description':'Server time in seconds',
         'type':'float',
-        'min':'-Inf',
+        'min':'0',
         'max':'Inf',
         'precision':'0'
       }],
       # Server writable objects
-      'writables': [{
-        'name':'x',
-        'description':'Testing readable variable',
-        'type':'float',
-        'min':'-Inf',
-        'max':'Inf',
-        'precision':'0'
-      }],
+      'writables': []
     },
   }
 }

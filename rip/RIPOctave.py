@@ -2,7 +2,7 @@
 @author: jcsombria
 '''
 from oct2py import octave
-from rip.core.RIPGeneric import RIPGeneric
+from rip.RIPGeneric import RIPGeneric
 
 class RIPOctave(RIPGeneric):
   '''

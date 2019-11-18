@@ -2,7 +2,7 @@
 @author: jcsombria
 '''
 import random
-from rip.core.RIPGeneric import RIPGeneric
+from rip.RIPGeneric import RIPGeneric
 
 class RIPAdapterTemplate(RIPGeneric):
   '''

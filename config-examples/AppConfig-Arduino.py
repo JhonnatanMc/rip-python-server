@@ -9,14 +9,14 @@ config = {
   # The 'impl' field should contain the name of the module (.py) and the
   # class that implement the control interface
   'control': {
-    'impl_module': 'RIPGeneric',
+    'impl_module': 'RIPArduino',
     # Also, if the class name is not the same as the module name:
     #'impl_name': 'RIPGeneric',
     'info': {
-      'name': 'RIP Generic',
-      'description': 'A generic implementation of RIP',
+      'name': 'RIP Arduino',
+      'description': 'An implementation of RIP to control an Arduino',
       'authors': 'J. Chacon',
-      'keywords': 'Raspberry PI, RIP',
+      'keywords': 'Arduino, RIP',
       # Server readable objects
       'readables': [{
         'name':'time',
@@ -25,9 +25,24 @@ config = {
         'min':'0',
         'max':'Inf',
         'precision':'0'
+      }, {
+        'name': 'y',
+        'description': 'Output variables',
+        'type': 'array',
+            'min': '0',
+            'max': '0',
+            'precision': '0'
       }],
       # Server writable objects
-      'writables': []
+      'writables': [
+        'name': 'params',
+        'description': 'PID params: kp, ki, kd, u_eq',
+        'type': 'array',
+        'min': '0',
+        'max': '0',
+        'precision': '0'
+        },
+      ]
     },
   }
 }
