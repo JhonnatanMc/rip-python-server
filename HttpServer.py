@@ -4,6 +4,7 @@
 '''
 import cherrypy
 import os
+import ujson
 
 from rip.RIPGeneric import RIPGeneric
 from rip.core import *
@@ -50,9 +51,8 @@ class HttpServer(object):
     # TO DO: stop when all clients are disconnected
     if expId is not None:
       if expId in [e['id'] for e in self.experiences]:
-        if not self.control.running:
-          self.control.start()
-        return self.control.nextSample()
+        evgen = self.control.connect()
+        return evgen.next()
     return 'event: CLOSE\n\n'
   SSE._cp_config = {'response.stream': True}
 

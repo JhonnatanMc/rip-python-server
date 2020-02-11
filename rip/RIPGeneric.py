@@ -20,8 +20,7 @@ class RIPGeneric(JsonRpcServer):
     metadata = self._parse_info(info)
     super().__init__(metadata['name'], metadata['description'])
     self.metadata = metadata
-    self.ssePeriod = 0.5
-    self.sseRunning = False
+    self.clients = []
     self._running = False
     self.addMethods({
       'get': { 'description': 'To read server variables',
@@ -33,6 +32,9 @@ class RIPGeneric(JsonRpcServer):
         'implementation': self.set,
       },
     })
+    self.period = 0.5   
+    s = samplers.Signal()
+    self.sampler = samplers.Periodic(self.period, s)
 
   def default_info(self):
     return {
@@ -64,10 +66,8 @@ class RIPGeneric(JsonRpcServer):
     '''
     Iniatilizes the server. Any code meant to be run at init should be here.
     '''
-    if not self.sseRunning:
-      self.sseRunning = True
-      self.sampler = samplers.Periodic(self.ssePeriod)
-    self._running = True
+    if not self.running:
+      self.running = True
 
   @property
   def running(self):
@@ -76,6 +76,14 @@ class RIPGeneric(JsonRpcServer):
   @running.setter
   def running(self):
     pass
+
+  def connect(self):
+    if len(self.clients) == 0:
+      sampler = threading.Thread(target=lambda: self.sampler.start())
+      sampler.start()
+    evgen = EventGenerator()
+    self.sampler.register(evgen)
+    return evgen
 
   def info(self, address='127.0.0.1:8080'):
     '''
@@ -199,46 +207,26 @@ class RIPGeneric(JsonRpcServer):
       writables.append(r['name'])
     return writables
 
-  def nextSample(self):
-    '''
-    Retrieve the next periodic update
-    '''
-    # TO DO: Remove this code and start when the first client arrives
-    if not self.sseRunning:
-      self.sseRunning = True
-      self.sampler = samplers.Periodic(self.ssePeriod)
+import threading
 
-    while self.sseRunning:
-      self.sampler.wait()
-      try:
-        self.preGetValuesToNotify()
-        toReturn = self.getValuesToNotify()
-        self.postGetValuesToNotify()
-      except:
-        toReturn = 'ERROR'
-      response = {"result":toReturn};
-      event = 'periodiclabdata'
-      id = round(self.sampler.time * 1000)
-      data = ujson.dumps(response)
-      yield 'event: %s\nid: %s\ndata: %s\n\n' % (event, id, data)
-
-  def preGetValuesToNotify(self):
-    '''
-    To do before obtaining values to notify
-    '''
-    pass
-
-  def getValuesToNotify(self):
-    '''
-    Which values will be notified
-    '''
-    return [
-      [ 'time' ],
-      [ self.sampler.lastTime() ]
-    ]
-
-  def postGetValuesToNotify(self):
-    '''
-    To do after obtaining values to notify
-    '''
-    pass
+class EventGenerator(object):
+ 
+  def __init__(self):
+    self.event = threading.Event()
+  
+  def update(self, data):
+    self.data = data
+    self.event.set()
+    
+  def next(self):
+    while True:
+      self.event.wait()
+      # Gather result
+      timestamp = self.data['timestamp']
+      result = {"result": self.data}
+      # Build SSE message
+      eventname = 'periodiclabdata'
+      id = round(timestamp * 1000)
+      data = ujson.dumps(result)
+      self.event.clear()
+      yield 'event: %s\nid: %s\ndata: %s\n\n' % (eventname, id, data)

@@ -1,1 +1,1 @@
-from .Samplers import PeriodicSampler as Periodic
+from .Samplers import PeriodicSampler as Periodic, Signal
