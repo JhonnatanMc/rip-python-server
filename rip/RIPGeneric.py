@@ -32,9 +32,10 @@ class RIPGeneric(JsonRpcServer):
         'implementation': self.set,
       },
     })
-    self.period = 0.5   
+    self.period = 5   
     s = samplers.Signal()
     self.sampler = samplers.Periodic(self.period, s)
+    self.samplerRunning = False
 
   def default_info(self):
     return {
@@ -78,10 +79,12 @@ class RIPGeneric(JsonRpcServer):
     pass
 
   def connect(self):
-    if len(self.clients) == 0:
+    if not self.samplerRunning:
+      self.samplerRunning = True
       sampler = threading.Thread(target=lambda: self.sampler.start())
       sampler.start()
     evgen = EventGenerator()
+
     self.sampler.register(evgen)
     return evgen
 

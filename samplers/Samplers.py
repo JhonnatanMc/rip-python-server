@@ -37,6 +37,8 @@ class Sampler(object):
   def wait(self):
     pass
 
+import math
+
 class PeriodicSampler(Sampler):
 
   def __init__(self, period, signal):
@@ -55,8 +57,10 @@ class PeriodicSampler(Sampler):
     # Wait until the next sampling time
     self.last = self.time
     self.time = time.time() - self.t0
-    self.next = self.time / self.Ts + self.Ts
-    interval = self.Ts - self.time % self.Ts
+    self.next = math.floor(self.time / self.Ts) + self.Ts
+    print(self.next)
+#    interval = self.Ts - self.time % self.Ts
+    interval = self.Ts
     time.sleep(interval)
 
   def sample(self):
@@ -77,17 +81,24 @@ class PeriodicSampler(Sampler):
     # Last sampling time
     return self.last
 
+  def start(self):
+    self.reset()
+    super().start()
 
 class PeriodicSoD(PeriodicSampler):
 
   def __init__(self, condition):
-    self.condition = condition
+    self.condition = []
+
+  def addCondition(condition):
+    self.conditions.append(condition)
 
   def wait(self):
-    event = false
+    event = False
     while not event:
       try:
-        event = condition()
+        for c in self.conditions:
+          event = event or c.evaluate()
       except:
         print('Cannot evaluate sampling condition.')
       super().wait()
