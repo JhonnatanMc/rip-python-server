@@ -4,3 +4,5 @@ A server implementation of the <a href="https://github.com/UNEDLabs/rip-spec">RI
 It enables the use of Arduino, MATLAB, RedPitaya (and many more) programs through the Internet as webservices.
 
 Check the tutorial videos at: https://www.youtube.com/playlist?list=PLKbjDA4ggHA-alv1g74xmLMv1pp5r3d3y
+
+This tool is not maintained or updated anymore. For a more recent version of RIP-Python contact ldelatorre@nebsyst.com
